@@ -49,7 +49,13 @@ export default function DonutChart({
   const circumference = 2 * Math.PI * normalizedRadius;
   const viewBox = `0 0 ${radius * 2} ${radius * 2}`;
 
-  let cumulativePercent = 0;
+  const computedSlices = slices.map((slice, idx) => {
+    const pct = total > 0 ? slice.value / total : 0;
+    const offset = circumference * (1 - pct);
+    const prevPcts = slices.slice(0, idx).reduce((s, prev) => s + (total > 0 ? prev.value / total : 0), 0);
+    const rotation = prevPcts * 360 - 90;
+    return { ...slice, pct, offset, rotation };
+  });
 
   return (
     <div className={styles.container}>
@@ -72,13 +78,8 @@ export default function DonutChart({
         />
 
         {/* Slices */}
-        {slices.map((slice, i) => {
-          const pct = total > 0 ? slice.value / total : 0;
-          const offset = circumference * (1 - pct);
-          const rotation = cumulativePercent * 360 - 90;
-          cumulativePercent += pct;
-
-          if (pct < 0.005) return null; // Skip tiny slices
+        {computedSlices.map(slice => {
+          if (slice.pct < 0.005) return null; // Skip tiny slices
 
           return (
             <circle
@@ -90,11 +91,11 @@ export default function DonutChart({
               stroke={slice.color}
               strokeWidth={strokeWidth}
               strokeDasharray={`${circumference}`}
-              strokeDashoffset={offset}
-              transform={`rotate(${rotation} ${radius} ${radius})`}
+              strokeDashoffset={slice.offset}
+              transform={`rotate(${slice.rotation} ${radius} ${radius})`}
               className={styles.slice}
             >
-              <title>{`${slice.label}: ₹${slice.value.toLocaleString('en-IN')} (${(pct * 100).toFixed(1)}%)`}</title>
+              <title>{`${slice.label}: ₹${slice.value.toLocaleString('en-IN')} (${(slice.pct * 100).toFixed(1)}%)`}</title>
             </circle>
           );
         })}
@@ -134,7 +135,7 @@ export default function DonutChart({
             </tr>
           </thead>
           <tbody>
-            {slices.map((slice, i) => {
+            {slices.map((slice) => {
               const pct = total > 0 ? ((slice.value / total) * 100).toFixed(1) : '0';
               return (
                 <tr key={slice.id}>

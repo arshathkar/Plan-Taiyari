@@ -163,7 +163,6 @@ export function computeTimeline(
 
     // Flags
     const flags: ComputedTask['flags'] = [];
-    const baselineDays = daysBetween(baselineDate, E);
 
     if (!task.done) {
       if (lf < daysBetween(baselineDate, T)) {

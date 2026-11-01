@@ -117,7 +117,7 @@ function largestRemainderRound(
 /* ── Core Engine ─────────────────────────────────────────────── */
 
 export function rebalance(input: RebalanceInput): RebalanceResult {
-  const { categories, oldBudget, newBudget, oldGuests, newGuests } = input;
+  const { categories, newBudget, oldGuests, newGuests } = input;
   const B1 = newBudget;
   const guestRatio = oldGuests > 0 ? newGuests / oldGuests : 1;
 
@@ -153,14 +153,8 @@ export function rebalance(input: RebalanceInput): RebalanceResult {
     floors.set(cat.id, floor);
   }
 
-  const totalFloor = Array.from(floors.values()).reduce((s, v) => s + v, 0);
-
   // Determine outcome
   const allIds = categories.map(c => c.id);
-  const freeIds = categories.filter(c => !c.locked).map(c => c.id);
-  const lockedTotal = categories.filter(c => c.locked).reduce((s, c) => s + c.amountInr, 0);
-  const freeNeed = totalNeed - lockedTotal;
-  const freeB1 = B1 - lockedTotal;
 
   let result: Map<string, number>;
   let outcome: RebalanceOutcome;

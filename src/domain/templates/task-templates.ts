@@ -94,9 +94,9 @@ const community: TaskTemplate[] = [
   { id: 'C21', title: 'Cash handling and expense log plan', categoryId: 'budget', priority: 2, effortDays: 1, dependsOn: ['C17'], mustFinishDaysBefore: 3 },
 ];
 
-const templates: Record<string, TaskTemplate[]> = { birthday, wedding, community };
+const templates: Record<EventType, TaskTemplate[]> = { birthday, wedding, community };
 
 /** Get task template for an event type */
-export function getTaskTemplate(eventType: string): TaskTemplate[] {
+export function getTaskTemplate(eventType: EventType): TaskTemplate[] {
   return (templates[eventType] ?? []).map(t => ({ ...t, dependsOn: [...t.dependsOn] }));
 }

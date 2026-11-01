@@ -31,9 +31,8 @@ export function rr1_dateChanged(prev: Plan, next: Plan): RippleEffect[] {
 
   const effects: RippleEffect[] = [{ type: 'recompute_timeline' }];
 
-  // Count tasks that will become tight
+  // Booked vendors that need re-confirming
   const bookedVendors = next.vendors.filter(v => v.status === 'booked');
-  const tightCount = next.tasks.filter(t => !t.done).length; // approximate
 
   let message = `Date moved to ${nextDate}.`;
   if (bookedVendors.length > 0) {

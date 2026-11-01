@@ -64,16 +64,6 @@ export default function IdeasPage() {
     });
   };
 
-  const restoreIdea = (ideaId: string) => {
-    updatePlan(p => {
-      const source = (p.ideas && p.ideas.length > 0) ? p.ideas : defaultList;
-      return {
-        ...p,
-        ideas: source.map(i => (i.id === ideaId ? { ...i, dismissed: false } : i)),
-      };
-    });
-  };
-
   const restoreAll = () => {
     updatePlan(p => {
       const source = (p.ideas && p.ideas.length > 0) ? p.ideas : defaultList;

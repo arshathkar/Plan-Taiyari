@@ -23,6 +23,7 @@ export function parseInr(input: string): number | null {
   s = s.replace(/^[₹]?\s*/, '');
   s = s.replace(/^rs\.?\s*/i, '');
   s = s.replace(/^inr\s*/i, '');
+  s = s.replace(/\s+only\s*$/i, '');
   s = s.replace(/\/-\s*$/, '');
   s = s.replace(/\s+only\s*$/i, '');
   s = s.trim();

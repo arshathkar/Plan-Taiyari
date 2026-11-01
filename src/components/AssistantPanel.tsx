@@ -159,6 +159,7 @@ export default function AssistantPanel() {
   const [input, setInput] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messageIdRef = useRef(0);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -167,15 +168,18 @@ export default function AssistantPanel() {
   const handleSend = (text: string) => {
     if (!text.trim()) return;
 
+    messageIdRef.current += 1;
+    const seq = messageIdRef.current;
+
     const userMsg: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: `user-${seq}`,
       role: 'user',
       text: text.trim(),
     };
 
     const { reply } = generateResponse(text, plan);
     const assistantMsg: ChatMessage = {
-      id: `asst-${Date.now()}`,
+      id: `asst-${seq}`,
       role: 'assistant',
       text: reply,
     };

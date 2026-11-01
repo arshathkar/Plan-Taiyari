@@ -1,21 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { usePlanStore } from '@/store/plan-store';
 import { copy } from '@/copy/en-IN';
 import { computeTimeline, todayIst, formatDateDisplay } from '@/engines';
 import ui from '@/components/ui.module.css';
+
+const emptySubscribe = () => () => {};
 
 export default function TimelinePage() {
   const plan = usePlanStore(s => s.plan);
   const updatePlan = usePlanStore(s => s.updatePlan);
   const [view, setView] = useState<'checklist' | 'timeline'>('checklist');
   const [filter, setFilter] = useState<'all' | 'ready' | 'blocked' | 'done'>('all');
-  const [today, setToday] = useState('2026-01-01');
-
-  useEffect(() => {
-    setToday(todayIst());
-  }, []);
+  const today = useSyncExternalStore(emptySubscribe, todayIst, () => '2026-11-01');
 
   if (!plan) return null;
   const eventDate = plan.intake.date?.kind === 'fixed' ? plan.intake.date.date : today;

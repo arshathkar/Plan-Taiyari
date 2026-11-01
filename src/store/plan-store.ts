@@ -240,8 +240,6 @@ export const usePlanStore = create<PlanState>()((set, get) => ({
       notes: '', origin: 'template' as const,
     }));
 
-    const eventDate = intake.date?.kind === 'fixed' ? intake.date.date : todayIst();
-
     // Vendor categories from templates
     const vendorTemplates = getVendorTemplate(eventType);
     const vendorCategories = vendorTemplates.map(vt => ({
@@ -289,7 +287,6 @@ export const usePlanStore = create<PlanState>()((set, get) => ({
 
   loadSampleEvent: () => {
     // Inline sample to avoid circular deps
-    const today = todayIst();
     const intake: Intake = {
       eventType: 'birthday',
       title: 'Dad\'s 60th Birthday',

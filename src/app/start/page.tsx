@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePlanStore } from '@/store/plan-store';
 import { copy } from '@/copy/en-IN';
 import { isReadyToPlan, missingFields, answeredCount, parseInr, isValidFutureDate, todayIst } from '@/engines';
 import type { Intake, EventType } from '@/domain/schema';
 import ui from '@/components/ui.module.css';
+
+const emptySubscribe = () => () => {};
 
 const EVENT_TYPES: { value: EventType; label: string; desc: string }[] = [
   { value: 'birthday', label: '🎂 Birthday', desc: 'A birthday party or milestone celebration' },
@@ -29,11 +31,7 @@ const ACCESSIBILITY_OPTIONS = [
 export default function StartPage() {
   const router = useRouter();
   const generatePlan = usePlanStore(s => s.generatePlan);
-  const [today, setToday] = useState('2026-01-01');
-
-  useEffect(() => {
-    setToday(todayIst());
-  }, []);
+  const today = useSyncExternalStore(emptySubscribe, todayIst, () => '2026-11-01');
 
   const [intake, setIntake] = useState<Intake>({
     eventType: null, title: '', date: null,

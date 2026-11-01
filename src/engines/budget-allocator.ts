@@ -47,7 +47,6 @@ export function allocateBudget(
 
   // Feasibility pre-check
   const minSum = freeCategories.reduce((s, c) => s + (c.minPct / 100) * total, 0);
-  const maxSum = freeCategories.reduce((s, c) => s + (c.maxPct / 100) * total, 0);
 
   if (remaining < minSum - 50) {
     return {

@@ -51,7 +51,8 @@ export function compareQuotes(
   quotes: QuoteInput[],
   guests: number,
   categoryBudget: number,
-  fitWeights: [number, number, number] = [0.6, 0.3, 0.1]
+  fitWeights: [number, number, number] = [0.6, 0.3, 0.1],
+  isSensitivityCheck: boolean = false
 ): ComparisonResult {
   if (quotes.length < 2) {
     return { comparisons: [], rankingHolds: true, sensitivityNote: '' };
@@ -136,6 +137,10 @@ export function compareQuotes(
   comparisons.sort((a, b) => b.fitScore - a.fitScore);
 
   // Sensitivity analysis
+  if (isSensitivityCheck) {
+    return { comparisons, rankingHolds: true, sensitivityNote: '' };
+  }
+
   const altWeights: [number, number, number][] = [
     [0.8, 0.1, 0.1], // coverage-heavy
     [0.4, 0.5, 0.1], // cost-heavy
@@ -165,7 +170,7 @@ function checkSensitivity(
   const baseOrder = baseRanking.map(c => c.quoteId);
 
   for (const weights of altWeights) {
-    const result = compareQuotes(requirements, quotes, guests, 0, weights);
+    const result = compareQuotes(requirements, quotes, guests, 0, weights, true);
     const order = result.comparisons.map(c => c.quoteId);
     if (order.join(',') !== baseOrder.join(',')) {
       return false;
