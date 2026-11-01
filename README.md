@@ -2,9 +2,7 @@
 
 A free, privacy-first event planning tool for first-time organisers in India. Plan weddings, birthdays, and community events with smart budgets, dependency-aware timelines, vendor checklists, and personalised ideas — all running locally in your browser.
 
-## 🔗 Live Demo
-
-> Deployed URL will be added here after deployment.
+## 🔗 Live Demo : https://plan-taiyari.vercel.app/
 
 ## 🎯 Problem Statement Alignment
 
