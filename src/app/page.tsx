@@ -1,69 +1,55 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
+import Link from 'next/link';
+import { usePlanStore } from '@/store/plan-store';
+import { copy } from '@/copy/en-IN';
+import { useRouter } from 'next/navigation';
+import styles from './page.module.css';
+import ui from '@/components/ui.module.css';
+
+export default function LandingPage() {
+  const loadSample = usePlanStore(s => s.loadSampleEvent);
+  const router = useRouter();
+
+  const handleSample = () => {
+    loadSample();
+    router.push('/plan/overview');
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main id="main-content" className={styles.landing}>
+      <div className={`${ui.card} ${styles.hero}`}>
+        <div className={styles.brand}>
+          <h1 className={styles.appName}>{copy.appName}</h1>
+          <p className={styles.subtitle}>{copy.subtitle}</p>
         </div>
+
+        <p className={styles.tagline}>
+          {copy.landing.heroSubtitle}
+        </p>
+
         <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          <Link href="/start" className={ui.btnPrimary}>
+            {copy.landing.ctaStart}
+          </Link>
+          <button onClick={handleSample} className={ui.btnSecondary}>
+            {copy.landing.ctaSample}
+          </button>
         </div>
-      </main>
-    </div>
+
+        <div className={styles.proofPoints}>
+          {copy.landing.proofPoints.map((point, i) => (
+            <div key={i} className={styles.proofPoint}>
+              <span className={styles.proofIcon} aria-hidden="true">✓</span>
+              <span>{point}</span>
+            </div>
+          ))}
+        </div>
+
+        <p className={styles.privacyNote}>
+          🔒 {copy.landing.privacyNote}
+        </p>
+      </div>
+    </main>
   );
 }

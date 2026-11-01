@@ -1,0 +1,94 @@
+/* ============================================================
+   Plan Taiyari — Glass Design System (§5.4)
+   Glassmorphic containers with accessibility fallbacks.
+   ============================================================ */
+
+/* L1 Backdrop — decorative aurora blobs */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40vmax 40vmax at 15% 10%, var(--blob-1), transparent 60%),
+    radial-gradient(35vmax 35vmax at 85% 20%, var(--blob-2), transparent 60%),
+    radial-gradient(45vmax 45vmax at 60% 90%, var(--blob-3), transparent 60%);
+  filter: blur(40px) saturate(120%);
+  animation: blob-drift 60s ease-in-out infinite alternate;
+}
+
+@keyframes blob-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(2%, -1%) scale(1.02); }
+  66%  { transform: translate(-1%, 2%) scale(0.98); }
+  100% { transform: translate(1%, -2%) scale(1.01); }
+}
+
+/* Remove blobs with reduced transparency */
+@media (prefers-reduced-transparency: reduce) {
+  body::before { display: none; }
+}
+:root[data-reduce-transparency="true"] body::before {
+  display: none;
+}
+
+/* Pause blob animation when tab is hidden or motion reduced */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+}
+:root[data-reduce-motion="true"] body::before {
+  animation: none;
+}
+
+/* L2 Glass surface — cards, panels, header, navigation */
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(140%);
+          backdrop-filter: blur(var(--blur)) saturate(140%);
+}
+
+/* L3 Strong glass — dialogs, popovers, assistant, toasts */
+.glass--strong {
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(140%);
+          backdrop-filter: blur(var(--blur)) saturate(140%);
+}
+
+/* Fallback when backdrop-filter is unsupported */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass {
+    background: rgba(255, 255, 255, 0.94);
+  }
+  .glass--strong {
+    background: rgba(255, 255, 255, 0.97);
+  }
+  :root[data-theme="dark"] .glass {
+    background: rgba(17, 24, 39, 0.94);
+  }
+  :root[data-theme="dark"] .glass--strong {
+    background: rgba(17, 24, 39, 0.97);
+  }
+}
+
+/* ============================================================
+   Print — no glass, no blur, single column
+   ============================================================ */
+@media print {
+  body::before { display: none; }
+  .glass,
+  .glass--strong {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    break-inside: avoid;
+  }
+}
